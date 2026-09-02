@@ -43,3 +43,26 @@ DATASET: La llave candidata es id_dataset. Se elige como llave primaria porque i
 MODELO: La llave candidata es id_modelo. Se elige como llave primaria porque permite identificar de manera única cada modelo.
 
 METRICA: Las llaves candidatas son id_metrica y nombre_metrica. Se elige id_metrica como llave primaria porque identifica de forma única cada métrica y no depende de su nombre.
+
+
+
+
+
+Hito semana 2:
+1. Tablas puente (N:M)
+
+Decisión: Crear la tabla participacion_proyecto.
+
+Por qué: Describe una acción real. Se agregó la columna rol porque el rol depende de esa participación específica, no del científico en general.
+
+2. Llaves Foráneas (1:N)
+
+Decisión: La FK siempre va en el lado "muchos" 
+
+Por qué: Para asegurar que solo haya un dato por celda (atomicidad).
+
+3. Participación parcial
+
+Decisión: La FK id_experimento se colocó dentro de la tabla modelo.
+
+Por qué: Todo modelo necesita obligatoriamente un experimento para existir, pero un experimento puede ejecutarse y no generar ningún modelo.
