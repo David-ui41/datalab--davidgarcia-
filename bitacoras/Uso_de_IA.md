@@ -1,0 +1,3 @@
+En este espacio se explicará cuando se uso IA para el desarrollo de la guia para asi mantener transparencia en el proceso, y en su lugar , usarla como un potencializador del aprendizaje.
+
+-En mi caso, me gusta trabajar con IA, ya que me puede aclarar muchos temas que no me quedan del todo claros, usando analogias y metaforas que permiten facilitar el entendimiento de los diferentes temas. He usado inteligencia artificail para el desarrollo de las preguntas teoricas, para principlamnete poder entender el concepto , y despues desarrollarlo con mis palbras y mis porpios ejemplos. Adicionalmente es un optimizador de timepo , ya que, con proporcionarle la tabla, el tipo de dato , su restricción, etc , esta puede facilitar la graficación del diagrama en la herramienta.

@@ -50,23 +50,27 @@ Completen con un ejemplo propio de DataLab para cada restricción:
 
 | Restricción | Qué garantiza | Ejemplo en DataLab |
 |---|---|---|
-| `NOT NULL` | | |
-| `UNIQUE` | | |
-| `DEFAULT` | | |
-| `CHECK` | | |
+| `NOT NULL` |Garantiza que la columna no pueda almacenar valores vacios  |nombre-modelo NOT NULL |
+| `UNIQUE` |Garantiza que no puedan existir dos filas con el mismo valor en esa columna |documento_usuario UNIQUE |
+| `DEFAULT` |Asigna un valor prederteminado a la columna si el usuario no ingresa ninguno al insertar la fila |saldo_cuenta_bancaria DEFAULT|
+| `CHECK` |Valida que un dato cumpla con una condición especifica | CHECK (numero_telefono=10) |
 
 **b)** ¿Todas las métricas de desempeño de un modelo caben bien en un `CHECK (valor BETWEEN 0 AND 1)`? Piensen en al menos una métrica que no encajaría y expliquen por qué.
 
+Respuesta: No seria un buen rango ya que existen algunas metricas de errores tales como MSE (error cuadratico medio) que pueden generar valores superiores a 1, por ende podria romper el modelo.
 _______________________________________________________________________________
 
 ### Llaves primarias y foráneas, formalizadas
 
 **c)** ¿Qué significa que una llave primaria sea "compuesta"? Den un ejemplo del esquema de DataLab.
 
+Respuesta: Una llave primaria es compuesta cuando es la combinación de dos o más columnas de una misma tabla, haciendo que se pueda identificar de manera unica cada registro. Este fenomeno se puede apreciar con las tablas puente cuando relaciona por ejemplo experimento y recurso (id_experimento, id recurso).
+
 _______________________________________________________________________________
 
 **d)** La relación EXPERIMENTO–produce–MODELO es 1:1 con participación parcial en EXPERIMENTO. Si `modelo.id_experimento` es FK pero no tiene `UNIQUE`, ¿qué error de diseño se podría colar? (piensen: ¿cuántas filas de `modelo` podrían terminar apuntando al mismo experimento?)
 
+Respuesta: El error de diseño seria que al no tener UNIQUE, se permitiria una relación de 1 a muchos en lugar 1 a 1. 
 _______________________________________________________________________________
 
 ### Ejercicio en papel
@@ -75,14 +79,22 @@ Para cada tabla de su esquema (de la Semana 2), completen esta ficha:
 
 | Tabla | Columna | Tipo de dato | Restricciones |
 |---|---|---|---|
-| | | | |
-| | | | |
-| | | | |
-| | | | |
-| | | | |
-| | | | |
-| | | | |
-| | | | |
+| cientifico de datos  |id_cientifico | Int| PK, NOT NULL|
+| cientifico_datos|nombre |VARCHAR |NOT NULL |
+|proyecto |id_proyecto | INT|PK , NOT NULL |
+|dataset |id_dataset |INT |PK , NOT NULL |
+|recurso |id_recurso |INT |PK , NOT NULL |
+|experimento | id_experimento| INT|PK , NOT NULL |
+| experimento| id_proyecto|INT | FK, NOT NULL|
+| experimento| id_dataset |INT | FK, NOT NULL|
+modelo | id_modelo | INT | PK , NOT NULL
+modelo| id_experimento |INT | FK, NOT NULL
+metrica |id-metrica | INT | PK , NOT NULL
+metrica | id_modelo |INT |FK, NOT NULL
+participación-proyecto | id_proyecto | INT | PK_FK
+participacion_proyecto| id_proyecto | INT |PK_ FK
+experimento-recurso | id experimento | INT | PK_FK
+experimento-recurso | id_recurso | INT | PK_FK
 
 *(Agreguen filas según necesiten — deben quedar las 8 tablas: 6 entidades + 2 puente.)*
 
@@ -94,13 +106,13 @@ Para cada tabla de su esquema (de la Semana 2), completen esta ficha:
 
 ¿En qué tabla o columna tuvo dudas su equipo al asignar tipo o restricción?
 
-_______________________________________________________________________________
+Respuesta: Saber que tipo de deato es FK , PK , o ambos.
 
 ### Digitalizar el esquema tipado (50 min)
 
 En dbdiagram.io (continuando el archivo de la Semana 2) o MySQL Workbench, agreguen tipos de dato y restricciones a todas las columnas.
 
-**Herramienta usada:** _______________________
+**Herramienta usada:** db.diagram.io
 
 > 💡 En DBML, las restricciones se escriben así:
 > ```
@@ -121,6 +133,7 @@ Traduzcan el esquema digitalizado a una tabla de especificación completa en `do
 
 **Ejercicio aplicado (sin ejecutar SQL todavía):** si intentaran insertar en `experimento` una fila con `id_proyecto = 999` y ese proyecto no existe en la tabla `proyecto`, ¿qué debería pasar? Respondan como decisión de diseño, no como sintaxis.
 
+Respuesta: Deberia rechazar la operación ya que se crearian registros huerfanos y se perderia la consistencia l+ogica entre tablas.
 _______________________________________________________________________________
 
 ### Revisión cruzada final (30 min)
@@ -129,9 +142,12 @@ Intercambien su ficha de especificación con otro equipo y verifiquen:
 
 **a)** ¿Cada FK tiene claramente indicada su tabla y columna de referencia?
 
+Respuesta: Si , las llaves fonaeas apuntan a su llave primaria.
 _______________________________________________________________________________
 
 **b)** ¿Encontraron algún `NOT NULL` que debería ser opcional, o viceversa?
+
+Respuesta: Si, algunos campos descriptivos opcionales admiten vaores nulos, pero otros como nombre o id , deben si o si ser llenados.
 
 _______________________________________________________________________________
 
@@ -146,22 +162,26 @@ _______________________________________________________________________________
 
 **1.** ¿Cuál es la diferencia entre un tipo de dato y una restricción?
 
+Respuesta: El tipo de dato restringe la naturaleza del mismo, mientras que la restricción establece reglas de validación logica (por ejemplo que una edad sea mayor o igual a 18 y menos o igual a 100)
 _______________________________________________________________________________
 
 **2.** ¿Por qué `modelo.id_experimento` necesita ser `UNIQUE` además de `FK`?
+
+Respuesta: Para asegurar que un experimento genere un unico modelo , y a su vez que un modelo pertenezca unicamente a un experimento.
 
 _______________________________________________________________________________
 
 **3.** Si `dataset.tamanio_filas` tuviera un valor negativo, ¿qué restricción lo habría evitado?
 
+ Respuesta: Una restricción de tipo CHECK que estableca que tamaño>=0.
 _______________________________________________________________________________
 
 ---
 
 ## Avance hacia el Hito 2
 
-- [ ] Esquema relacional tipado y con restricciones en `diagramas/relacional/s03-esquema-tipado.png`.
-- [ ] `documentacion/diccionario_datos.md` con la ficha de especificación completa de las 8 tablas.
-- [ ] Commit realizado con el mensaje sugerido.
+- [ X] Esquema relacional tipado y con restricciones en `diagramas/relacional/s03-esquema-tipado.png`.
+- [x ] `documentacion/diccionario_datos.md` con la ficha de especificación completa de las 8 tablas.
+- [ x] Commit realizado con el mensaje sugerido.
 
 *(El Hito 2 completo — normalización + creación en motor real — se cierra en la Semana 5.)*
