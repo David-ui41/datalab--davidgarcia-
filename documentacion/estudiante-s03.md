@@ -78,23 +78,39 @@ _______________________________________________________________________________
 Para cada tabla de su esquema (de la Semana 2), completen esta ficha:
 
 | Tabla | Columna | Tipo de dato | Restricciones |
-|---|---|---|---|
-| cientifico de datos  |id_cientifico | Int| PK, NOT NULL|
-| cientifico_datos|nombre |VARCHAR |NOT NULL |
-|proyecto |id_proyecto | INT|PK , NOT NULL |
-|dataset |id_dataset |INT |PK , NOT NULL |
-|recurso |id_recurso |INT |PK , NOT NULL |
-|experimento | id_experimento| INT|PK , NOT NULL |
-| experimento| id_proyecto|INT | FK, NOT NULL|
-| experimento| id_dataset |INT | FK, NOT NULL|
-modelo | id_modelo | INT | PK , NOT NULL
-modelo| id_experimento |INT | FK, NOT NULL
-metrica |id-metrica | INT | PK , NOT NULL
-metrica | id_modelo |INT |FK, NOT NULL
-participación-proyecto | id_proyecto | INT | PK_FK
-participacion_proyecto| id_proyecto | INT |PK_ FK
-experimento-recurso | id experimento | INT | PK_FK
-experimento-recurso | id_recurso | INT | PK_FK
+| --- | --- | --- | --- |
+|cientifico_datos | id_cientifico | INT | PK, NOT NULL| 
+| cientifico_datos | nombre | VARCHAR(100) | NOT NULL
+| cientifico_datos | correo | VARCHAR(100) | NOT NULL
+| proyecto | id_proyecto | INT | PK, NOT NULL
+| proyecto | nombre | VARCHAR(150) | NOT NULL
+| proyecto | descripcion | TEXT | Opcional
+| dataset | id_dataset | INT | PK, NOT NULL
+| dataset | nombre | VARCHAR(150) | NOT NULL
+| dataset | fuente | VARCHAR(150) | NOT NULL
+| dataset | fecha_carga | DATE | NOT NULL
+| dataset | tamanio_filas | INT | NOT NULL
+| experimento | id_experimento | INT | PK, NOT NULL
+| experimento | nombre_experimento | VARCHAR(150) | NOT NULL
+| experimento | fecha_ejecucion | DATE | NOT NULL
+| experimento | configuracion | TEXT | Opcional
+| experimento | id_proyecto | INT | FK, NOT NULL
+| experimento | id_dataset | INT | FK, NOT NULL
+| experimento | id_cientifico | INT | FK, NOT NULL
+| modelo | id_modelo | INT | PK, NOT NULL
+| modelo | nombre | VARCHAR(100) | NOT NULL
+| modelo | version | VARCHAR(20) | NOT NULL
+| modelo | algoritmo | VARCHAR(100) | NOT NULL
+| modelo | id_experimento | INT | FK, UNIQUE, NOT NULL
+| metrica | id_metrica | INT | PK, NOT NULL
+| metrica | nombre_metrica | VARCHAR(50) | NOT NULL
+| metrica | valor | FLOAT | NOT NULL
+| metrica | fecha_calculo | DATE | NOT NULL
+| metrica | id_modelo | INT | FK, NOT NULL
+| participacion | id_cientifico | INT | PK_FK, NOT NULL
+| participacion | id_proyecto | INT | PK_FK, NOT NULL
+| proyecto_dataset | id_proyecto | INT | PK_FK, NOT NULL
+| proyecto_dataset | id_dataset | INT | PK_FK, NOT NULL
 
 *(Agreguen filas según necesiten — deben quedar las 8 tablas: 6 entidades + 2 puente.)*
 
