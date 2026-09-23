@@ -278,6 +278,7 @@ ese proyecto.
 todavía tiene experimentos?
 
 Respuesta: Seria muy importante ya que al momento de eliminar una entidad fuerte, tenemos que tener en cuenta que de ella se deglosan las entidades debiles, las cuales no pueden ser llamadas sin su padre. Por ende no solo se eliminaria la PK, si no todo lo que salga de ella, que pueden ser más tablas, puentes , etc.
+Por eso restrict, evita eliminar accidentalmente información que todavia es necesaria para mantener una relación entre proyecto y experimento.
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
@@ -360,6 +361,8 @@ Para utilizar esta estrategia, la columna FK debe permitir `NULL`.
 ¿Qué información se perdería y qué información se conservaría en este
 escenario?
 
+Respuesta: Se perderia la relación entre experimento y proyecto , porque pasaria a NULL. Pero a su vez se conservaria infromación que es  propia del experimento como id_experimento,fecha_creación , etc.
+
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
@@ -370,17 +373,18 @@ escenario?
 
 Para cada llave foránea de su esquema, elijan una política `ON DELETE` y
 justifíquenla.
+  
 
-  Llave foránea                                      Política elegida   Justificación
-  -------------------------------------------------- ------------------ ---------------
-  `experimento.id_proyecto → proyecto`                                  
-  `experimento.id_cientifico → cientifico_datos`                        
-  `modelo.id_experimento → experimento`                                 
-  `metrica.id_modelo → modelo`                                          
-  `participacion.id_cientifico → cientifico_datos`                      
-  `participacion.id_proyecto → proyecto`                                
-  `uso_dataset.id_dataset → dataset`                                    
-  `uso_dataset.id_experimento → experimento`                            
+  |Llave foránea | Política elegida    |  Justificación|
+  |----|---|---|
+  |`experimento.id_proyecto → proyecto`| RESTRICT| Un proyecto puede tener experimentos importantes, por ende se evita eliminar el proyecto mientas existan experimentos que dependedan del mismo |
+  |`experimento.id_cientifico → cientifico_datos`| RESTRICT |  Suponinedo que un cientifico aún guarda una relación con con un experimento, con RESTRICT, se eviat  perder la relación entre ambos.                      
+  `modelo.id_experimento →experimento`| CASCADE | Un modelo esta estrechamente relacionado con un experimento. Por lo tanto si este se elimina, derivados de el se convierten en información vacia o inutil.                                 
+  `metrica.id_modelo → modelo`| CASCADE | Las metricas estan diseñadas para un modelo en especifico. Si el modelo desaparece las metricas tambien deberian de hacerlo.                                        
+  `participacion.id_cientifico → cientifico_datos`|CASCADE | "particpación" al se una tabla puente , si se elimina el cientifico, tambien seria coherente eliminar los registros de sus intervenciones.                      
+  `participacion.id_proyecto → proyecto`| CASCADE | Ocurre algo similar respecto a el caso anterior. Si se elimina el proyecto, las participaciones relacionadas a él, tambien deben ser eliminadas.                               
+  `uso_dataset.id_dataset → dataset`| CASCADE | Si el dataset desaperce , el registro deja de tener sentido sin el.                                   
+  `uso_dataset.id_experimento → experimento`            | CASCADE | Si se elimina el experimento, los registros que indican que datasets   utilizo ese experimento deja de tener sentido.             
 
 ### Pregunta de análisis
 
@@ -389,6 +393,8 @@ justifíquenla.
 
 No respondan solamente `CASCADE`, `RESTRICT` o `SET NULL`. Expliquen la
 razón desde el punto de vista del negocio.
+
+Respuesta: Deberian eliminarse tambien ya que ls metricas registran valores asociados a un modelo especifico. Suponiendo que el modelo deja de existir, esas metricas no tienen un modelo al cual pertenecer dentro del sistema.
 
 ------------------------------------------------------------------------
 
@@ -531,6 +537,8 @@ Esto dificulta:
 **c)** ¿Qué problema tiene este diseño si quisieran buscar todos los
 modelos con `accuracy` mayor a `0.90`?
 
+Respuesta: El rpoblema es que accuracy esta almacenado junto con otras metricas, lo que dificulta filtrar, comsultar , comparar , etc. El diseño no cumple con la cardinalidad adecuada ya que se estan alamevnando varios valores dentro de una celda.
+
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
@@ -538,6 +546,9 @@ modelos con `accuracy` mayor a `0.90`?
 **d)** ¿Cómo lo corregirían?
 
 > **Pista:** ya tienen la respuesta en su propio esquema de la Semana 2.
+
+
+Respuesta: Una solución adecuada podria ser alamcenar cada metrica en una fila independiente para que se puedan hacer consultas de manera directa.
 
 ------------------------------------------------------------------------
 
@@ -704,11 +715,16 @@ solo una?
 
 ¿Y `fecha_ejecucion`?
 
+Respuesta: la llave nombre_dataset depende unicamente de id_dataset, por lo que no necesita id_experimento.
+A su vez fecha_ejecución depende unicamnete de id_experimento y no necesita id_dataset. Por lo tanto cada uno de estos atributos presnetan una dependencia parcial porque cada uno depende de una parte de la llave.
+
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 
 **f)** ¿Cómo se corrige esta dependencia parcial?
+
+Respuesta: Se puede colocar los atributos en las tablas a las que realemnte pertencen , asi los datos de dataset se establecen en la tabla dataset , y los datos del experimento permanecen en la tabla experimento, y la relacion entre estas dos seria una tabla puente.
 
 ------------------------------------------------------------------------
 
@@ -829,11 +845,15 @@ depende de `id_proyecto`?
 
 ¿Cómo se llama esa cadena de dependencia?
 
+Respuesta: La llave nombre_proyecto depende de id_proyecto , no de id_experimento. Esta cadena se denomina dependencia transitiva.
+
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 
 **h)** ¿Cómo se corrige?
+
+Respuesta: Se tendria que eliminar nombre_proyecto de la tabla experimento  y mantenerlo unicmante en proyecto, asi se evita repetir nombre_proyecto en cada experimento.
 
 ------------------------------------------------------------------------
 
@@ -886,6 +906,8 @@ Esta pregunta conecta las semanas anteriores con la normalización.
 siguiendo las reglas de conversión E-R → relacional:
 
 > **¿Por qué sería esperable que ya esté en 3FN?**
+
+Respuesta: Porque en un modelo E-R cada entidad mantiene sus propios atributos , y las releaciones se expresan mediante puentes o fk.
 
 ------------------------------------------------------------------------
 
@@ -951,6 +973,7 @@ Antes de modificar el modelo, revisen los ejemplos de la formalización.
 > ¿Alguno de los tres ejemplos "malos" de la formalización les recordó
 > algo de un borrador anterior de su propio esquema?
 
+Respuesta: Si ya que los ejemplos muestran errores comunes en un esquema inicial. Algunos son alamcenar varias metricas dentro de una misma columna, repetir atributos de proyecto dentro de experimento , etc. La solución constaria en verificar que cada atributo este ubicado en la tabla que relamente pertence.
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
@@ -973,7 +996,7 @@ Utilicen la siguiente matriz:
 Tabla | ¿Valores atómicos? (1FN) | ¿Sin dependencia parcial? (2FN, solo si aplica) | ¿Sin dependencia transitiva? (3FN)|
 -----------|-----------|----------------|----------------|
 `cientifico_datos`| -- | --| -- |
-`proyecto`| -- | --| -- |                        
+`proyecto`| -- | --| -- | a                    
 `dataset`| -- | --| -- |                                
 `experimento`| -- | --| -- |                                 
 `modelo`| -- | --| -- |                             
