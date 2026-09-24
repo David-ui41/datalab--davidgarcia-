@@ -995,14 +995,14 @@ Utilicen la siguiente matriz:
 
 Tabla | ¿Valores atómicos? (1FN) | ¿Sin dependencia parcial? (2FN, solo si aplica) | ¿Sin dependencia transitiva? (3FN)|
 -----------|-----------|----------------|----------------|
-`cientifico_datos`| -- | --| -- |
-`proyecto`| -- | --| -- | a                    
-`dataset`| -- | --| -- |                                
-`experimento`| -- | --| -- |                                 
-`modelo`| -- | --| -- |                             
-`metrica`| -- | --| -- |                                  
-`participacion`| -- | --| -- |                                 
-`uso_dataset`| -- | --| -- |                           
+`cientifico_datos`| Cumple | --| Cumple |
+`proyecto`| Cumple | --| Cumple | a                    
+`dataset`| Cumple | --| Cumple |                                
+`experimento`| Cumple | --| Cumple |                                 
+`modelo`| Cumple | --| Cumple |                             
+`metrica`| Cumple | --| Cumple |                                  
+`participacion`| Cumple | Cumple| Cumple |                                 
+`uso_dataset`| Cumple | Cumple| Cumple |                           
 
 
 ### Para cada tabla deben preguntarse:
@@ -1170,17 +1170,23 @@ El commit debe dejar evidencia de la evolución del modelo.
 
 ### 1. ¿Cuál es la diferencia entre `RESTRICT` y `CASCADE`?
 
+Respuesta: RESTRICT no permite la eliminación de un registo padre cuando existen registros hijos asociados, a diferencia de CASCADE, que elimina el registro padre y todos sus hijos asociados.
+
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 
 ### 2. ¿Por qué 2FN solo importa cuando la llave primaria es compuesta?
 
+Respuesta: Porque la violacion de 2FN sucede cuando un atributo NO CLAVE depende de una parte de una llave primaria compuesta, ya que si una llave primaria tiene una sola columna , es imposible que exista una parte de la llave la cual pueda depender parcialmente de un atributo.
+
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 
 ### 3. Si su esquema fue construido correctamente a partir del modelo E-R, ¿por qué es esperable que ya esté en 3FN?
+
+Respuesta: Porque en una transformación ER, cada entidad conserva sus propios atributos y las relaciones se representan mediante tablas puente, asi se evita almaenar atributos de una entidad, en otras tablas.
 
 ------------------------------------------------------------------------
 
@@ -1192,22 +1198,22 @@ El commit debe dejar evidencia de la evolución del modelo.
 
 Antes de finalizar la sesión, verifiquen:
 
--   [ ] Entiendo qué es integridad referencial.
--   [ ] Puedo explicar la diferencia entre `RESTRICT`, `CASCADE` y
+-   [ x] Entiendo qué es integridad referencial.
+-   [x ] Puedo explicar la diferencia entre `RESTRICT`, `CASCADE` y
     `SET NULL`.
--   [ ] Puedo justificar una política `ON DELETE`.
--   [ ] Revisé las 8 llaves foráneas de DataLab.
--   [ ] Entiendo qué significa 1FN.
--   [ ] Puedo identificar una dependencia parcial.
--   [ ] Entiendo por qué 2FN se relaciona especialmente con PK
+-   [x ] Puedo justificar una política `ON DELETE`.
+-   [ x] Revisé las 8 llaves foráneas de DataLab.
+-   [ x] Entiendo qué significa 1FN.
+-   [ x] Puedo identificar una dependencia parcial.
+-   [ x] Entiendo por qué 2FN se relaciona especialmente con PK
     compuestas.
--   [ ] Puedo identificar una dependencia transitiva.
--   [ ] Entiendo el objetivo de 3FN.
--   [ ] Audité las 8 tablas de DataLab.
--   [ ] Documenté las decisiones.
+-   [ x] Puedo identificar una dependencia transitiva.
+-   [x ] Entiendo el objetivo de 3FN.
+-   [x ] Audité las 8 tablas de DataLab.
+-   [ x] Documenté las decisiones.
 -   [ ] Actualicé el diagrama o `.dbml`.
--   [ ] Realicé el commit.
--   [ ] Mi contribución individual puede identificarse en Git.
+-   [ x] Realicé el commit.
+-   [ x] Mi contribución individual puede identificarse en Git.
 
 ------------------------------------------------------------------------
 
@@ -1258,6 +1264,7 @@ ejercicio adicional.
 Si `metrica.id_modelo` utiliza `ON DELETE CASCADE`, ¿qué riesgo existe
 si un usuario elimina accidentalmente un modelo?
 
+Respuesta: El riesgo es que la eliminacion del modelo povoque la eliminacion de todas las metricas asociadas a el, por eso se debe tener mucho cuidado al momento de utilizar cascade.
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
@@ -1266,6 +1273,8 @@ si un usuario elimina accidentalmente un modelo?
 
 ¿Por qué podría ser preferible `RESTRICT` para una relación entre
 `proyecto` y `experimento`?
+
+Respuesta: Porque un proyecto puede tener varios eperimentos importantes, por ende es recomendable verificar si el proyecto que queremos eliminar, tiene aún contenido del que queremeos conservar su contexto.
 
 ------------------------------------------------------------------------
 
@@ -1276,6 +1285,7 @@ si un usuario elimina accidentalmente un modelo?
 ¿Por qué guardar `"accuracy:0.95, f1:0.89"` como texto dificulta el
 trabajo analítico?
 
+Respuesta: Porque varias metricas estan asociadas a una cadena de texto, y no pueden ser tartadas de manera independiente.
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
@@ -1284,6 +1294,8 @@ trabajo analítico?
 
 ¿Por qué `nombre_dataset` pertenece conceptualmente a `dataset` y no a
 `uso_dataset`?
+
+Respuesta: Porque el nombre identifica al dataset que depende de id_dataset. Sin embargo uso_datset es solo una tabla puente, es decir una entidad debil que depende de otras para ser creada, por lo tanto dicha entidad no puede pertencer a esta tabla.
 
 ------------------------------------------------------------------------
 
@@ -1294,6 +1306,8 @@ trabajo analítico?
 ¿Qué anomalía de actualización podría aparecer si `nombre_proyecto`
 estuviera repetido en muchos registros de `experimento`?
 
+Respuesta: Se puede presentar una anomalia de actualizacion, ya que si se actualizan unos datos y otros no, la base de datos tendria diferentes nombres para un mismo proyecto.
+
 ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
@@ -1302,6 +1316,8 @@ estuviera repetido en muchos registros de `experimento`?
 
 ¿Cuál es la relación entre una correcta transformación E-R → relacional
 y la normalización?
+
+Respuesta: Esto genera principalmente que se mantenga separados los atributos de cada entidad , llaves primarias y foraneas, tablas puentes , etc . Lo que reduce problemas repetición o de pertenencia.
 
 ------------------------------------------------------------------------
 
@@ -1347,6 +1363,10 @@ La explicación debe incluir:
 7.  2FN;
 8.  3FN;
 9.  un ejemplo de DataLab.
+
+Respuesta: Inicialmente se deberia revisar la integridad referencial, despues hay que revisar que las FK existentes, tengan una relación con una tabla padre existente. 
+Dependiendo de las politica definida, al eliminar se debe usar RESTRICT (no eliminar el padre si tiene registros relacionados ), CASCADE (Elimina los registros hijos) O SET NULL (mantiene los registros hijos , pero su llave foranea cambia a NULL) respectivamente.
+Posteriormente se revisa la normalización. Si cada celda tiene un solo valor es 1FN , si cumple con 1FN y no tiene dependencias parciales es 2FN  y si cumple con 2FN y no tiene dependencias transitivas es 3FN.
 
 Después, el compañero debe formular una pregunta sobre la explicación.
 
