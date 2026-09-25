@@ -307,36 +307,60 @@ Crea:
 
 ```text
 Nombre:
-[ ]
+[ David]
 
 Correo:
-[ ]
+[ davidgarcia@usat.edu.co]
+
+Comando:
+
+INSERT INTO cientifico_datos.
+	(nombre,correo_institucional)
+VALUES
+	('David','davidgarcia@usat.edu.co');
+
 ```
 
 ### 11.2 Un proyecto
 
 ```text
 Nombre:
-[ ]
+[ Datalab semana 6]
 
 Descripción:
-[ ]
+[ Modificacion de bases de datos en SQL server ]
+
+Comando:
+
+INSERT INTO proyecto
+	(nombre_proyecto,descripcion)
+VALUES
+	('Datalab semana 6 ','Modificacion de bases de datos en SQL server');
+
 ```
 
 ### 11.3 Un dataset
 
 ```text
 Nombre:
-[ ]
+[notas historicas ]
 
 Fuente:
-[ ]
+[ Interna ]
 
 Fecha de carga:
-[ ]
+[ 2026-09-25]
 
 Tamaño de filas:
-[ ]
+[ 50000 ]
+
+Comando :
+
+INSERT INTO dataset
+	(nombre,fuente,fecha_carga,tamanio_filas)
+VALUES
+	('notas historicas','Interna','2026-09-25',50000);
+
 ```
 
 ### 11.4 Un experimento
@@ -346,6 +370,15 @@ Debe utilizar IDs existentes de:
 ```text
 proyecto
 cientifico_datos
+
+Comando: 
+
+
+INSERT INTO experimento
+	(id_proyecto,id_cientifico,fecha_ejecucion,configuracion)
+VALUES
+	(7,7,'2026-09-25','Avance en la semana 6');
+
 ```
 
 Después de cada `INSERT`, utiliza `SELECT` para verificar.
@@ -410,9 +443,45 @@ WHERE id_proyecto = 2;
 Realiza:
 
 1. Actualiza la descripción de un proyecto.
+
+Respuesta: 
+
+UPDATE proyecto
+
+SET descripcion = 'Actualización descripción proyecto con UPDATE'
+
+WHERE id_proyecto = 7;
+
 2. Actualiza el nombre de un científico.
+
+Respuesta:
+
+UPDATE cientifico_datos
+
+SET nombre = 'David Garcia '
+
+WHERE id_cientifico = 7;
+
 3. Actualiza la fuente de un dataset.
+
+Respuesta:
+
+UPDATE dataset
+
+SET fuente = 'Externa'
+
+WHERE id_dataset = 8;
+
 4. Actualiza la configuración de un experimento.
+
+Respuesta:
+
+UPDATE experimento
+
+SET configuracion = 'Modificación configuración semana 6'
+
+WHERE id_experimento = 11;
+
 
 Después de cada operación utiliza `SELECT` para comprobar el resultado.
 
@@ -506,12 +575,30 @@ Debemos preguntarnos:
 
 Identifica un registro creado específicamente para la práctica.
 
+Respuesta:
+
+Creamos un registro que vamos a eliminar 
+
+INSERT INTO cientifico_datos
+	
+(nombre,correo_institucional)
+
+VALUES 
+	
+('Cientifico retirado');
+
 Primero:
 
 ```sql
 SELECT *
 FROM proyecto
 WHERE id_proyecto = [ID];
+
+CASO SQL SERVER: 
+
+SELECT * 
+FROM cientifico_datos
+WHERE id_cientifico = 8;
 ```
 
 Después:
@@ -519,6 +606,11 @@ Después:
 ```sql
 DELETE FROM proyecto
 WHERE id_proyecto = [ID];
+
+CASO SQL:
+
+DELETE FROM cientifico_datos
+WHERE id_cientifico = 8
 ```
 
 Finalmente:
@@ -532,9 +624,20 @@ WHERE id_proyecto = [ID];
 Documenta:
 
 - qué registro eliminaste;
+
+Respuesta: Elimine el cientifico de datos con el id 8 
+
 - por qué lo seleccionaste;
+
+Respuesta: Porque es un cientifico que se retiro 
+
 - si existían relaciones;
+
+Respuesta:No, era un cientifico que no tenia relacion con ningun poryecto o experimento 
+
 - qué resultado obtuviste.
+
+Respuesta: Se elimino exitosamente el cientifico de 8 8 que se retiro
 
 ---
 
@@ -664,19 +767,19 @@ Documenta:
 
 ```text
 Nombre del proyecto:
-[ ]
+[ Datalab Semana 6 ]
 
 Descripción:
-[ ]
+[ Actualizacion de descripcion de poryecto con UPDATE ]
 
 ¿Por qué se crea?
-[ ]
+[ Para poner en practica las distintas operaciones de SQL server entre las tablas. ]
 
 ¿Quién es responsable?
-[ ]
+[ Yo ]
 
 ¿Qué otros datos necesitará posteriormente?
-[ ]
+[ Una descripcion y una nombre ]
 ```
 
 ---
@@ -689,7 +792,7 @@ Construye el `INSERT`:
 INSERT INTO proyecto
     (nombre, descripcion)
 VALUES
-    (...);
+    ('Datalab semana 6 ', 'Actualizacion de descripcion de poryecto con UPDATE');
 ```
 
 ---
@@ -704,7 +807,7 @@ SELECT
     nombre,
     descripcion
 FROM proyecto
-WHERE ...;
+WHERE id_proyecto = 7;
 ```
 
 ---
@@ -715,8 +818,8 @@ Modifica una característica del proyecto:
 
 ```sql
 UPDATE proyecto
-SET ...
-WHERE ...;
+SET nombre = "Datalab SEM 6 "
+WHERE id_proyecto = 7;
 ```
 
 ---
@@ -729,7 +832,7 @@ SELECT
     nombre,
     descripcion
 FROM proyecto
-WHERE ...;
+WHERE id_proyecto = 7;
 ```
 
 ---
@@ -740,7 +843,7 @@ Elimina únicamente el registro creado para la práctica:
 
 ```sql
 DELETE FROM proyecto
-WHERE ...;
+WHERE id_proyecto = 7;
 ```
 
 ---
@@ -798,16 +901,16 @@ Documenta:
 
 ```text
 ¿Qué ocurrió?
-[ ]
+[ El sistema marco un error ya que esos ids no existen  ]
 
 ¿Por qué ocurrió?
-[ ]
+[ Porque se quiere modificar datos que no estan en las tablas. ]
 
 ¿Qué restricción intervino?
-[ ]
+[  Hubo una restriccion de llave foranea]
 
 ¿Qué relación del modelo está protegiendo SQL Server?
-[ ]
+[ La integrudad refencial entre tablas. ]
 ```
 
 Conecta:
