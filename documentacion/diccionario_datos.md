@@ -88,3 +88,13 @@ Tabla semana 3
 | participacion | id_proyecto | INT | PK (Compuesta), FK, NOT NULL |
 | proyecto_dataset | id_proyecto | INT | PK (Compuesta), FK, NOT NULL |
 | proyecto_dataset | id_dataset | INT | PK (Compuesta), FK, NOT NULL |
+
+
+Tabla experimento semana 07
+![alt text](image-1.png)
+Se agregó la columna estado , la cual tiene 4 formas diferentes , ademas de que se verifico si habian estados que eran incorrectos, para corregirlos respectivamente. Además se configuro un valor (planificado) por defecto a los registros existentes para que no hayan conflictos de nulidad. 
+
+Tabla dataset semana 07
+![alt text](image-2.png)
+Se agregó la columna notas, que se definio como VARCHAR(MAX) NULL para permitir que datasets nuevos puedan no tener observaciones.
+

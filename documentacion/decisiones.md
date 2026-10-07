@@ -66,3 +66,26 @@ Por qué: Para asegurar que solo haya un dato por celda (atomicidad).
 Decisión: La FK id_experimento se colocó dentro de la tabla modelo.
 
 Por qué: Todo modelo necesita obligatoriamente un experimento para existir, pero un experimento puede ejecutarse y no generar ningún modelo.
+
+
+
+Fecha:
+[ 6/10/2026 ]
+
+Cambio realizado:
+[ Se modificó la tabla experimento y dataset ] 
+
+Motivo:
+[ Mayor organización, mejor clasificación de los experimentos y necesidad de expandir las tablas y conservar su contenido ]
+
+Problema encontrado:
+[ Falta de columnas, datos con nombres repetidos e inconvenientes sobre nulidad]
+
+Solución:
+[ Aplicar comandos que nos permitan identificar que datos se repiten, efectuar cambios que respeten las restricciones y no violen conceptualmente las relaciones ]
+
+Restricciones afectadas:
+[ La nulidad fue afectada ya que se tuvo que llenar la tabla para que pudiera existir ]
+
+Impacto sobre datos existentes:
+[ No hubo ya que no se eliminó la tabla, si no que se agrego la columna necesitada ]
