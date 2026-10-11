@@ -324,7 +324,7 @@ El objetivo de esta semana es reconocer que la pregunta necesita información di
 
 > ¿Qué científico de datos ejecutó cada experimento?
 
-Respuesta:
+Respuesta: El cientifico 1 participo en el proyecto 1 y 3 , el cientifico 2 participo en el proyecto 1 y 4 , el cientifico 3 participo en el proyecto 2 , y el cientifico 4 participo en el proyecto 3.
 
 ### Información necesaria
 
@@ -339,10 +339,10 @@ Explique qué información se encuentra en cada tabla.
 
 ```text
 cientifico_datos:
-[Escriba aquí]
+el id_cientifico, el nombre y el correo_institucional.
 
 experimento:
-[Escriba aquí]
+El id_experimento , el id_proyecto , el id_cientifico, la fecha_ejecución, la configuración , y el estado.
 ```
 
 ### Tipo de consulta
@@ -362,14 +362,13 @@ experimento:
 ### Consulta SQL
 
 ```sql
--- No es necesario resolver todavía el JOIN.
--- Describa aquí qué información necesitaría relacionar.
+ JOIN seria una consulta util ya que sirve para unir filas de tablas diferentes 
 ```
 
 ### Resultado esperado
 
 ```text
-[Escriba aquí]
+El resultado esperado seria una tabla nueva donde se muestre el id del cientifico , junto con su cantidad de participaciones en los disntntos proyectos.
 ```
 
 ---
@@ -380,7 +379,7 @@ experimento:
 
 > ¿Qué experimentos pertenecen a cada proyecto?
 
-Resúesta:
+Resúesta: Un join que muestre una fusion de la tabla proyecto y experimento.
 
 ### Información necesaria
 
@@ -412,7 +411,7 @@ experimento
 ### Resultado esperado
 
 ```text
-[Escriba aquí]
+Un join que muestre que experimentos pertenecen a cada proyectos
 ```
 
 ---
@@ -422,7 +421,7 @@ experimento
 ### Pregunta de negocio
 
 > ¿Qué modelos fueron generados a partir de cada experimento?
-
+s
 Respuesta:
 
 ### Información necesaria
