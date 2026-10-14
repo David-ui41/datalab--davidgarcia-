@@ -1,0 +1,422 @@
+DataLab - Semana 8 | Plantilla de respuestas
+Estudiante: s08-filtros-orden-agregacion.sql
+
+EJERCICIO 1
+Consulta / respuesta:
+USE datalab1
+GO
+SELECT id_proyecto, nombre_proyecto
+FROM proyecto;
+
+Observaciones:
+Se seleccionaron las columnas solicitadas en lugar de usar * para cumplir
+con las buenas practicas de la consulta.
+
+----------------------------------------
+
+EJERCICIO 2
+Consulta / respuesta:
+SELECT id_dataset , nombre , fuente
+FROM dataset
+WHERE fuente = 'externa'
+Observaciones:
+Se usa el operador logico = , para filtar las filas de la columna fuente
+donde coincidan con el texto especifica , que en este caso es 'externa'.
+
+----------------------------------------
+
+EJERCICIO 3
+Consulta / respuesta:
+
+SELECT id_metrica , nombre_metrica , valor
+FROM metrica
+WHERE valor >= 0.80 ;
+Observaciones:
+Se usa el operador mayor o igual para filtrar valores dentro de un rango.
+
+----------------------------------------
+
+EJERCICIO 4
+Consulta / respuesta:
+SELECT id_metrica , nombre_metrica , valor
+FROM metrica
+WHERE valor BETWEEN 0.70 AND 0.90 ;
+
+Observaciones:
+Se usa BETWEEN , que es un operador inclusivo , es decir que incluye los
+valores extremos.
+
+----------------------------------------
+
+EJERCICIO 5
+Consulta / respuesta:
+SELECT nombre , fuente
+FROM dataset
+WHERE fuente IN ('interna','externa');
+Observaciones:
+El operador IN nos permite buscar una cadena de texto dentro de las filas
+
+----------------------------------------
+
+EJERCICIO 6
+Consulta / respuesta:
+SELECT nombre
+FROM dataset
+WHERE nombre LIKE 'EEG%';
+
+Observaciones:
+El operador LIKE busca caracteres , y junto a el comodín %, permite que
+existan más palabras después.
+
+----------------------------------------
+
+EJERCICIO 7
+Consulta / respuesta:
+USE datalab1
+GO 
+
+SELECT id_dataset , nombre , tamanio_filas
+FROM dataset 
+WHERE tamanio_filas IS NULL;
+
+SELECT id_dataset , nombre , tamanio_filas
+FROM dataset 
+WHERE tamanio_filas IS NOT NULL;
+
+
+Observaciones:
+Para verificar si hay valores nulos, no se puede usar un operador lógico para NULL, en su lugar se utiliza IS NULL o IS NOT NULL para ello.
+
+----------------------------------------
+
+EJERCICIO 8
+Consulta / respuesta:
+USE datalab1
+GO 
+
+SELECT id_dataset, nombre, fuente, fecha_carga 
+FROM dataset 
+WHERE fuente = 'externa' AND fecha_carga >= '2026-01-01';
+
+Observaciones:
+El operador AND fuerza que ambas condiciones se cumplan a la vez, cumplinedo la misma función que el operador lógico "y".
+
+----------------------------------------
+
+EJERCICIO 9
+Consulta / respuesta:
+USE datalab1
+GO 
+
+
+SELECT id_dataset, nombre, fuente 
+FROM dataset 
+WHERE NOT fuente = 'externa';
+
+
+SELECT id_dataset, nombre, fuente 
+FROM dataset 
+WHERE fuente <> 'externa';
+Observaciones:
+Ambas estructuras funcionan de la misma manera , ya que si existieran campos nulos , ambas estructuras los ignorarían igualmente
+
+----------------------------------------
+
+EJERCICIO 10
+Consulta / respuesta:
+USE datalab1
+GO 
+
+
+SELECT nombre, fecha_carga 
+FROM dataset 
+ORDER BY fecha_carga DESC;
+
+Observaciones:
+DESC hace que la base de datos ordene los valores de forma descendente, dejando asi los valores más recientes en las primeras filas
+
+----------------------------------------
+
+EJERCICIO 11
+Consulta / respuesta:
+USE datalab1
+GO 
+
+
+SELECT nombre, fuente, fecha_carga 
+FROM dataset 
+ORDER BY fuente ASC, fecha_carga DESC;
+
+Observaciones:
+Organiza incialmente fuente por forma ascendente, en caso de empates, los organiza por fecha de carga más reciente
+
+----------------------------------------
+
+EJERCICIO 12
+Consulta / respuesta:
+USE datalab1
+GO 
+
+
+SELECT COUNT(*) AS total_datasets 
+FROM dataset;
+
+Observaciones:
+La función count cuenta todas las filas de la tabla, la cual , guardamos con un nombre , para posteriormente hacer una consulta sobre dicha tabla que acabamos de crear.
+
+----------------------------------------
+
+EJERCICIO 13
+Consulta / respuesta:
+USE datalab1
+GO 
+
+
+SELECT 
+    AVG(valor) AS promedio, 
+    MIN(valor) AS minimo, 
+    MAX(valor) AS maximo 
+FROM metrica;
+Observaciones:
+Agrupa todas las filas de metricas, para conocer las tendencias de los valores.
+
+----------------------------------------
+
+EJERCICIO 14
+Consulta / respuesta:
+USE datalab1
+GO
+
+SELECT fuente, COUNT(*) AS cantidad_de_datasets 
+FROM dataset 
+GROUP BY fuente;
+
+Observaciones:
+[Sin observaciones]
+
+----------------------------------------
+
+EJERCICIO 15
+Consulta / respuesta:
+USE datalab1
+GO
+
+SELECT nombre_metrica, AVG(valor) AS promedio_valor 
+FROM metrica 
+GROUP BY nombre_metrica;
+
+Observaciones:
+Genera el promedio de la métrica para cada tipo.
+
+----------------------------------------
+
+EJERCICIO 16
+Consulta / respuesta:
+USE datalab1
+GO
+
+SELECT nombre_metrica, AVG(valor) AS promedio_valor 
+FROM metrica 
+GROUP BY nombre_metrica 
+HAVING AVG(valor) > 0.80;
+
+Observaciones:
+La condición no puede ir en el WHERE ya que esta condición evalua filas antes de agrupar 
+
+----------------------------------------
+
+EJERCICIO 17
+Consulta / respuesta:
+USE datalab1
+GO
+
+INSERT INTO proyecto (nombre_proyecto, descripcion) 
+VALUES ('Proyecto prueba','Proyecto HTML');
+
+SELECT id_proyecto, nombre_proyecto, descripcion 
+FROM proyecto 
+WHERE nombre_proyecto = 'Proyecto prueba';
+
+Observaciones:
+Se omite id_proyecto ya que es una columna autoincremental, por ende SQL la modifica autonomamente.
+
+----------------------------------------
+
+EJERCICIO 18
+Consulta / respuesta:
+USE datalab1
+GO
+
+SELECT id_proyecto, nombre_proyecto, descripcion 
+FROM proyecto 
+WHERE nombre_proyecto = 'Proyecto prueba';
+
+
+UPDATE proyecto 
+SET descripcion = 'Descripcion modificada HTML' 
+WHERE nombre_proyecto = 'Proyecto prueba';
+
+
+SELECT id_proyecto, nombre_proyecto, descripcion 
+FROM proyecto 
+WHERE nombre_proyecto = 'Proyecto prueba';
+
+Observaciones:
+Con la consulta SELECT podemos saber exactamente que hay dentro de nuestra tabla , con ello conocemos si por ejemplo , el UPDATE si fue exitosamente realizado.
+
+----------------------------------------
+
+EJERCICIO 19
+Consulta / respuesta:
+USE datalab1
+GO
+
+SELECT id_proyecto, nombre_proyecto 
+FROM proyecto 
+WHERE nombre_proyecto = 'Proyecto prueba';
+
+
+DELETE FROM proyecto 
+WHERE nombre_proyecto = 'Proyecto prueba';
+
+
+SELECT id_proyecto, nombre_proyecto 
+FROM proyecto 
+WHERE nombre_proyecto = 'Proyecto prueba';
+
+Observaciones:
+Con este delete controlado , pudimos conocer su estructura , y posteriormente consultarlo con SELECT
+
+----------------------------------------
+
+EJERCICIO 20
+Consulta / respuesta:
+USE datalab1
+GO
+
+SELECT nombre_metrica, AVG(valor) AS promedio_valor 
+FROM metrica 
+GROUP BY nombre_metrica 
+HAVING AVG(valor) > 0.80;
+
+Observaciones:
+[Sin observaciones]
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 1
+Consulta:
+USE datalab1
+GO
+SELECT fuente, COUNT(*) AS total_datasets 
+FROM dataset 
+GROUP BY fuente;
+
+Interpretación:
+5O externos y 50 internos.
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 2
+Consulta:
+USE datalab1
+GO
+SELECT id_dataset, nombre, fuente, tamanio_filas 
+FROM dataset 
+WHERE tamanio_filas IS NULL;
+
+
+Interpretación:
+
+Estan vacios el 10 , 20 , 30 , 40 , 50 , 60 , 70 , 80 , 90 y 100
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 3
+Consulta:
+USE datalab1
+GO
+SELECT MAX(tamanio_filas) AS tamanio_maximo_informado 
+FROM dataset;
+
+Interpretación:
+123750
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 4
+Consulta:
+USE datalab1
+GO
+
+SELECT nombre_metrica, AVG(valor) AS promedio_valor 
+FROM metrica 
+GROUP BY nombre_metrica;
+
+
+Interpretación:
+accuracy: 0.792700
+precision: 0.715000
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 5
+Consulta:
+USE datalab1
+GO
+SELECT nombre_metrica, AVG(valor) AS promedio_valor 
+FROM metrica 
+GROUP BY nombre_metrica 
+HAVING AVG(valor) > 0.80;
+
+Interpretación:
+Filtra y muestra las metricas con un promedio mayor a 0.80
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 6
+Consulta:
+USE datalab1
+GO
+
+SELECT algoritmo, COUNT(*) AS cantidad_modelos 
+FROM modelo 
+GROUP BY algoritmo;
+
+Interpretación:
+El algoritmo arbol de decisión , random forest , red nueronal , regresion logistica y SVM tienen 20 cantidad de modelos.
+
+----------------------------------------
+
+PREGUNTA DE NEGOCIO 7
+Consulta:
+USE datalab1
+GO
+SELECT id_modelo, nombre, version, algoritmo 
+FROM modelo 
+WHERE version LIKE '1.2%';
+
+
+Interpretación:
+Los modelos con id 2
+7
+12
+17
+22
+27
+32
+37
+42
+47
+52
+57
+62
+67
+72
+77
+82
+87
+92
+97
+
+----------------------------------------
