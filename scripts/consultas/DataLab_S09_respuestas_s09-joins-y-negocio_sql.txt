@@ -1,0 +1,275 @@
+DataLab - Semana 9 | Respuestas
+Estudiante: s09-joins-y-negocio.sql
+
+EJERCICIO 1
+Consulta SQL:
+SELECT p.nombre_proyecto, e.id_experimento, e.fecha_ejecucion
+FROM dbo.proyecto AS p
+INNER JOIN dbo.experimento AS e
+    ON e.id_proyecto = p.id_proyecto
+ORDER BY p.id_proyecto;
+Resultado e interpretación:
+Devuelve los proyectos que tienen experimentos. Con los datos semilla hay 100 filas: cada proyecto tiene un experimento asociado.
+
+----------------------------------------
+
+EJERCICIO 2
+Consulta SQL:
+SELECT c.nombre AS nombre_cientifico, e.fecha_ejecucion
+FROM dbo.cientifico_datos AS c
+INNER JOIN dbo.experimento AS e
+    ON e.id_cientifico = c.id_cientifico
+ORDER BY c.id_cientifico;
+Resultado e interpretación:
+Devuelve el nombre de cada científico junto con la fecha de su experimento. La semilla genera 100 científicos y 100 experimentos relacionados uno a uno.
+
+----------------------------------------
+
+EJERCICIO 3
+Consulta SQL:
+SELECT m.nombre AS nombre_modelo, m.algoritmo, e.id_experimento
+FROM dbo.modelo AS m
+INNER JOIN dbo.experimento AS e
+    ON e.id_experimento = m.id_experimento
+ORDER BY m.id_modelo;
+Resultado e interpretación:
+Muestra cada modelo con el algoritmo y el experimento al que pertenece. La semilla produce 100 coincidencias.
+
+----------------------------------------
+
+EJERCICIO 4
+Consulta SQL:
+SELECT m.nombre AS nombre_modelo,
+       met.nombre_metrica,
+       met.valor
+FROM dbo.modelo AS m
+INNER JOIN dbo.metrica AS met
+    ON met.id_modelo = m.id_modelo
+ORDER BY m.id_modelo, met.nombre_metrica;
+Resultado e interpretación:
+Muestra las métricas registradas por modelo. La semilla crea dos métricas por modelo (accuracy y precision), por lo que se esperan 200 filas.
+
+----------------------------------------
+
+EJERCICIO 5
+Consulta SQL:
+SELECT e.id_experimento, m.nombre AS nombre_modelo
+FROM dbo.experimento AS e
+LEFT JOIN dbo.modelo AS m
+    ON m.id_experimento = e.id_experimento
+ORDER BY e.id_experimento;
+Resultado e interpretación:
+Conserva todos los experimentos aunque no tengan modelo. En la semilla actual todos tienen modelo, así que aparecen 100 filas sin NULL en nombre_modelo.
+
+----------------------------------------
+
+EJERCICIO 6
+Consulta SQL:
+SELECT p.nombre_proyecto, e.id_experimento
+FROM dbo.proyecto AS p
+LEFT JOIN dbo.experimento AS e
+    ON e.id_proyecto = p.id_proyecto
+ORDER BY p.id_proyecto;
+Resultado e interpretación:
+Conserva todos los proyectos, incluso si no tuvieran experimentos. En los datos semilla cada proyecto tiene uno, así que se esperan 100 filas.
+
+----------------------------------------
+
+EJERCICIO 7
+Consulta SQL:
+SELECT e.id_experimento
+FROM dbo.experimento AS e
+LEFT JOIN dbo.modelo AS m
+    ON m.id_experimento = e.id_experimento
+WHERE m.id_modelo IS NULL
+ORDER BY e.id_experimento;
+Resultado e interpretación:
+El filtro IS NULL deja solo experimentos sin modelo. Con los datos semilla el resultado es vacío, porque cada experimento tiene un modelo.
+
+----------------------------------------
+
+EJERCICIO 8
+Consulta SQL:
+SELECT c.nombre AS nombre_cientifico, e.fecha_ejecucion
+FROM dbo.cientifico_datos AS c
+RIGHT JOIN dbo.experimento AS e
+    ON e.id_cientifico = c.id_cientifico
+ORDER BY e.id_experimento;
+Resultado e interpretación:
+RIGHT JOIN conserva todas las filas de la tabla derecha, experimento. Como cada experimento tiene un científico válido, se muestran 100 filas con coincidencia.
+
+----------------------------------------
+
+EJERCICIO 9
+Consulta SQL:
+SELECT m.nombre, m.version, m.algoritmo
+FROM dbo.modelo AS m
+WHERE m.algoritmo = N'Random Forest'
+ORDER BY m.nombre;
+Resultado e interpretación:
+Filtra los modelos cuyo algoritmo sea Random Forest. La semilla asigna este algoritmo cuando id_experimento % 5 = 2; se esperan 20 modelos.
+
+----------------------------------------
+
+EJERCICIO 10
+Consulta SQL:
+SELECT p.nombre_proyecto, e.fecha_ejecucion
+FROM dbo.proyecto AS p
+INNER JOIN dbo.experimento AS e
+    ON e.id_proyecto = p.id_proyecto
+WHERE e.fecha_ejecucion >= '20260101'
+ORDER BY e.fecha_ejecucion DESC;
+Resultado e interpretación:
+Muestra experimentos desde el 1 de enero de 2026. La semilla calcula fechas dentro de los últimos 89 días respecto a GETDATE(); si se ejecuta en octubre de 2026, los 100 experimentos cumplen el filtro.
+
+----------------------------------------
+
+EJERCICIO 11
+Consulta SQL:
+SELECT m.nombre AS nombre_modelo,
+       met.nombre_metrica,
+       met.valor
+FROM dbo.modelo AS m
+INNER JOIN dbo.metrica AS met
+    ON met.id_modelo = m.id_modelo
+WHERE met.nombre_metrica = N'accuracy'
+ORDER BY met.valor DESC;
+Resultado e interpretación:
+Devuelve únicamente las métricas accuracy, ordenadas de mayor a menor valor. La semilla crea una accuracy por modelo, así que se esperan 100 filas.
+
+----------------------------------------
+
+EJERCICIO 12
+Consulta SQL:
+SELECT m.nombre, m.algoritmo
+FROM dbo.modelo AS m
+WHERE m.version LIKE N'1.2%'
+ORDER BY m.nombre;
+Resultado e interpretación:
+LIKE '1.2%' encuentra versiones que comienzan por 1.2. En la semilla version = '1.' + (id_experimento % 5) + '.0', por lo que corresponden los modelos cuyo experimento tiene residuo 2 al dividir por 5: 20 filas.
+
+----------------------------------------
+
+EJERCICIO 13
+Consulta SQL:
+SELECT d.nombre, d.fuente
+FROM dbo.dataset AS d
+WHERE d.id_dataset NOT IN (
+    SELECT u.id_dataset
+    FROM dbo.uso_dataset AS u
+)
+ORDER BY d.id_dataset;
+Resultado e interpretación:
+Lista datasets que no aparecen en uso_dataset. Con la semilla, cada dataset del 1 al 100 se utiliza una vez, por lo que no devuelve filas. NOT IN puede fallar lógicamente si la subconsulta incluye NULL; aquí id_dataset es NOT NULL.
+
+----------------------------------------
+
+EJERCICIO 14
+Consulta SQL:
+SELECT d.nombre, d.tamanio_filas
+FROM dbo.dataset AS d
+WHERE d.tamanio_filas > (
+    SELECT AVG(d2.tamanio_filas)
+    FROM dbo.dataset AS d2
+)
+ORDER BY d.tamanio_filas DESC;
+Resultado e interpretación:
+La subconsulta calcula el promedio ignorando tamaños NULL. Con la semilla, los tamaños no nulos son 1.250 × i para i no múltiplo de 10; el promedio es 62.500. Se devuelven los tamaños superiores a 62.500.
+
+----------------------------------------
+
+EJERCICIO 15
+Consulta SQL:
+SELECT m.nombre, m.algoritmo, m.version
+FROM dbo.modelo AS m
+WHERE m.id_experimento IN (
+    SELECT e.id_experimento
+    FROM dbo.experimento AS e
+    WHERE e.id_proyecto = 10
+)
+ORDER BY m.nombre;
+Resultado e interpretación:
+La subconsulta obtiene los experimentos del proyecto 10 y la consulta externa busca sus modelos. La semilla relaciona el experimento 10 con el proyecto 10, así que se espera un modelo.
+
+----------------------------------------
+
+EJERCICIO 16
+Consulta SQL:
+SELECT met.id_metrica, met.id_modelo,
+       met.nombre_metrica, met.valor
+FROM dbo.metrica AS met
+WHERE met.valor > (
+    SELECT AVG(met2.valor)
+    FROM dbo.metrica AS met2
+)
+ORDER BY met.valor DESC;
+Resultado e interpretación:
+Compara cada valor con el promedio global de todas las métricas. AVG ignora NULL; valor es NOT NULL. Solo se muestran las métricas por encima de ese promedio.
+
+----------------------------------------
+
+EJERCICIO 17
+Consulta SQL:
+SELECT p.nombre_proyecto,
+       COUNT(e.id_experimento) AS cantidad_experimentos
+FROM dbo.proyecto AS p
+INNER JOIN dbo.experimento AS e
+    ON e.id_proyecto = p.id_proyecto
+GROUP BY p.id_proyecto, p.nombre_proyecto
+ORDER BY p.id_proyecto;
+Resultado e interpretación:
+Agrupa por proyecto y cuenta sus experimentos. INNER JOIN excluye proyectos sin experimentos; en la semilla hay 100 proyectos y cada uno tiene exactamente uno.
+
+----------------------------------------
+
+EJERCICIO 18
+Consulta SQL:
+SELECT p.nombre_proyecto,
+       COUNT(e.id_experimento) AS cantidad_experimentos
+FROM dbo.proyecto AS p
+LEFT JOIN dbo.experimento AS e
+    ON e.id_proyecto = p.id_proyecto
+GROUP BY p.id_proyecto, p.nombre_proyecto
+ORDER BY p.id_proyecto;
+Resultado e interpretación:
+LEFT JOIN conserva todos los proyectos. COUNT(e.id_experimento) cuenta solo identificadores no NULL, por lo que un proyecto sin experimentos mostraría 0. En la semilla todos tienen 1.
+
+----------------------------------------
+
+EJERCICIO 19
+Consulta SQL:
+SELECT m.id_modelo,
+       COUNT(met.id_metrica) AS cantidad_metricas
+FROM dbo.modelo AS m
+INNER JOIN dbo.metrica AS met
+    ON met.id_modelo = m.id_modelo
+GROUP BY m.id_modelo
+HAVING COUNT(met.id_metrica) > 1
+ORDER BY m.id_modelo;
+Resultado e interpretación:
+HAVING filtra los grupos después del conteo y deja modelos con más de una métrica. La semilla tiene dos métricas por cada modelo, así que se esperan 100 filas, cada una con cantidad_metricas = 2.
+
+----------------------------------------
+
+EJERCICIO 20
+Consulta SQL:
+-- Alternativa A: LEFT JOIN + IS NULL
+SELECT d.nombre, d.fuente
+FROM dbo.dataset AS d
+LEFT JOIN dbo.uso_dataset AS u
+    ON u.id_dataset = d.id_dataset
+WHERE u.id_dataset IS NULL
+ORDER BY d.id_dataset;
+
+-- Alternativa B: NOT IN (consulta equivalente si la subconsulta no contiene NULL)
+SELECT d.nombre, d.fuente
+FROM dbo.dataset AS d
+WHERE d.id_dataset NOT IN (
+    SELECT u.id_dataset
+    FROM dbo.uso_dataset AS u
+)
+ORDER BY d.id_dataset;
+Resultado e interpretación:
+Ambas consultas buscan datasets sin uso. Con los datos semilla ambas devuelven cero filas, porque los 100 datasets están vinculados a un experimento. Preferiría LEFT JOIN ... IS NULL por su claridad y porque evita el problema de NOT IN si la subconsulta devuelve NULL; en este esquema u.id_dataset es NOT NULL.
+
+----------------------------------------
